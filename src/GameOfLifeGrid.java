@@ -4,7 +4,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GameOfLifeGrid extends JPanel {
-    private static final int GRID_SIZE = 50; // Number of cells in each dimension
+    private static final int GRID_SIZE = 80; // Number of cells in each dimension
     private static final int CELL_SIZE = 10; // Size of each cell in pixels
     private static final int GRID_WIDTH = GRID_SIZE * CELL_SIZE;
     private static final int GRID_HEIGHT = GRID_SIZE * CELL_SIZE;

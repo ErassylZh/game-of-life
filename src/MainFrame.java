@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,15 +13,27 @@ public class MainFrame extends JFrame {
     private JLabel endLabel;
     private int stepCount;
     private boolean simulationRunning;
+    private int sliderValue=1;
     public MainFrame() {
         setTitle("Game of Life");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         grid = new GameOfLifeGrid();
         stepsLabel = new JLabel("Steps: 0");
+        JSlider slider = new JSlider(1, 5, 1);
         JButton startButton = new JButton("Start");
         JButton stopButton = new JButton("Stop");
         endLabel=new JLabel();
+        slider.setPaintLabels(true);
+        slider.setMajorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setSnapToTicks(true);
+        slider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                sliderValue=slider.getValue();
+            }
+        });
 
         startButton.addActionListener(new ActionListener() {
             @Override
@@ -35,6 +49,7 @@ public class MainFrame extends JFrame {
         });
 
         JPanel panel = new JPanel();
+        panel.add(slider);
         panel.add(stepsLabel);
         panel.add(startButton);
         panel.add(stopButton);
@@ -61,7 +76,7 @@ public class MainFrame extends JFrame {
                     if(!grid.haveAliveCell()) break;
                     if(!grid.isChanged()) break;
                     try {
-                        Thread.sleep(500); // Adjust the delay between steps as needed
+                        Thread.sleep(500/sliderValue); // Adjust the delay between steps as needed
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

@@ -13,7 +13,8 @@ public class MainFrame extends JFrame {
     private JLabel endLabel;
     private int stepCount;
     private boolean simulationRunning;
-    private int sliderValue=1;
+    private int sliderValue = 1;
+
     public MainFrame() {
         setTitle("Game of Life");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,30 +24,15 @@ public class MainFrame extends JFrame {
         JSlider slider = new JSlider(1, 5, 1);
         JButton startButton = new JButton("Start");
         JButton stopButton = new JButton("Stop");
-        endLabel=new JLabel();
+        endLabel = new JLabel();
         slider.setPaintLabels(true);
         slider.setMajorTickSpacing(1);
         slider.setPaintTicks(true);
         slider.setSnapToTicks(true);
-        slider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                sliderValue=slider.getValue();
-            }
-        });
+        slider.addChangeListener(changeEvent -> sliderValue = slider.getValue());
 
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                startSimulation();
-            }
-        });
-        stopButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                stopSimulation();
-            }
-        });
+        startButton.addActionListener(actionEvent -> startSimulation());
+        stopButton.addActionListener(actionEvent -> stopSimulation());
 
         JPanel panel = new JPanel();
         panel.add(slider);
@@ -58,31 +44,29 @@ public class MainFrame extends JFrame {
         add(panel, "South");
 
 
-
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
     private void startSimulation() {
-        simulationRunning=true;
-        Thread simulationThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    grid.updateGameState();
-                    stepCount++;
-                    stepsLabel.setText("Steps: " + stepCount);
-                    if(!simulationRunning) return;
-                    if(!grid.haveAliveCell()) break;
-                    if(!grid.isChanged()) break;
-                    try {
-                        Thread.sleep(500/sliderValue); // Adjust the delay between steps as needed
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        simulationRunning = true;
+        Thread simulationThread = new Thread(() -> {
+            while (true) {
+                grid.updateGameState();
+                stepCount++;
+                stepsLabel.setText("Steps: " + stepCount);
+                if (!simulationRunning) return;
+                if (!grid.haveAliveCell()) break;
+                if (!grid.isChanged()) break;
+                try {
+                    Thread.sleep(500 / sliderValue); // Adjust the delay between steps as needed
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                endLabel.setText("life end on "+stepCount+" step!");
             }
+            endLabel.setText("life end on " + stepCount + " step!");
+
         });
 
         simulationThread.start();
